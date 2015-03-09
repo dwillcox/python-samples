@@ -7,7 +7,7 @@ def pfactor(n,flist=None):
     for i in xrange(2,n):
         if (n%i==0):
             flist.append(i)
-            flist = pfactor(n//i,flist)
+            pfactor(n//i,flist)
             return flist
     flist.append(n)
     return flist

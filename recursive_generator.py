@@ -49,7 +49,7 @@ def permx(x,y=None,ntot=None):
                                 # to the user (if ntot>1)
 				yield y
 
-xtest = [[0,1.0,'a'],[0,-1.0,'b'],[0,4.0,'5',6,'seven']]
+xtest = [['a','b','c'],[0,1],[3.0,4.0]]
 
 print 'Using the recursive generator: '
 t1 = profile.timer('recursive generator')
