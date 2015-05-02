@@ -5,13 +5,16 @@ from functools import partial
 from SharedMemory2Numpy import shared2np
 
 # Some definitions
-n = 10000 # Size of array is n x n
-n_procs = 1 # Number of processors to use
+n = 10000
+n_procs = 2
 s2np = shared2np()
 a = multiprocessing.Array(ctypes.c_double, n*n)
 np_a = s2np.shmem_as_ndarray(a).reshape((n,n))
-print 'Shared memory array as a numpy array'
-print np_a
+t_avg = multiprocessing.Array(ctypes.c_double, n)
+np_t_avg = s2np.shmem_as_ndarray(a)
+
+#print 'Shared memory array as a numpy array'
+#print np_a
 
 # Do some parallel processing
 # Note how I'm passing parameters to the functions, since pool.map can pass only 1 argument.
@@ -25,12 +28,20 @@ pool.map(filla, range(n))
 pool.close()
 pool.join()
 
-print 'Filled shared memory numpy array:'
-print np_a
+#print 'Filled shared memory numpy array:'
+#print np_a
 
 # get the average of the array
-avg = np.average(np_a)
-print 'Average: ' + str(avg)
+#avg = np.average(np_a)
+#print 'Average: ' + str(avg)
+def rowaverage(i,t_avg=np_t_avg,p=np_a):
+    np_t_avg[i] = np.mean(p[i])
+
+pool = multiprocessing.Pool(processes=n_procs)
+pool.map(rowaverage,range(n))
+pool.close()
+pool.join()
+avg = np.mean(np_t_avg)
 
 def avgmask(i,ave=avg,p=np_a):
     meanrow = np.average(p[i])
@@ -53,5 +64,5 @@ pool = multiprocessing.Pool(processes=n_procs)
 pool.map(avgmask,range(n))
 pool.close()
 pool.join()
-print 'Rows in shared array with below-average averages replaced by subsequent rows.'
-print np_a
+#print 'Rows in shared array with below-average averages replaced by subsequent rows.'
+#print np_a
