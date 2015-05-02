@@ -1,3 +1,8 @@
+"""
+Integrate the function f(x,y,z) over the box with sides ranging over [0,100) using Monte Carlo.
+
+Pass the number of points to use for Monte Carlo as a single integer command line parameter.
+"""
 import numpy as np
 import sys
 

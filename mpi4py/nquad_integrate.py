@@ -1,3 +1,6 @@
+"""
+Integrate the function f(x,y,z) using scipy's nquad integration routine.
+"""
 import numpy as np
 from scipy.integrate import nquad
 
