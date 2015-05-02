@@ -1,0 +1,37 @@
+**Fill Only:
+Array Size: 10000x10000
+N: 4
+Time: 2.603s
+N: 1
+Time: 6.994s
+
+Array Size: 5000x5000
+N: 4
+Time: 0.917s
+N: 1
+Time: 1.777s
+
+Array Size: 1000x1000
+N: 4
+Time: 0.179s
+N: 1
+Time: 0.177s
+
+**Fill and Averaging/Re-assignment:
+Array Size: 10000x10000
+N: 4
+Time: 2.881s
+N: 1
+Time: 7.660s
+
+Array Size: 5000x5000
+N: 4
+Time: 0.880s
+N: 1
+Time: 2.138s
+
+Array Size: 1000x1000
+N: 4
+Time: 0.286s
+N: 1
+Time: 0.284s
