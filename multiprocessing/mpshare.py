@@ -5,8 +5,8 @@ from functools import partial
 from SharedMemory2Numpy import shared2np
 
 # Some definitions
-n = 10000
-n_procs = 1
+n = 10000 # Size of array is n x n
+n_procs = 1 # Number of processors to use
 s2np = shared2np()
 a = multiprocessing.Array(ctypes.c_double, n*n)
 np_a = s2np.shmem_as_ndarray(a).reshape((n,n))
