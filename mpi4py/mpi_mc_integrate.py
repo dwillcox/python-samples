@@ -8,9 +8,9 @@ import numpy as np
 import sys
 
 # Global MPI data structures
-mpi_comm = MPI.COMM_WORLD
-mpi_size = mpi_comm.Get_size()
-mpi_rank = mpi_comm.Get_rank()
+mpi_comm = MPI.COMM_WORLD # communicator object
+mpi_size = mpi_comm.Get_size() # number of processors available
+mpi_rank = mpi_comm.Get_rank() # which processor am I?
 
 # Define function to integrate
 def f(x,y,z):
@@ -33,11 +33,15 @@ if (mpi_rank == 0):
     # Use ppp for the rest of the processors and ppp+remainder for the rank 0 processor
     if mpi_size > 1:
     	for i in xrange(1,mpi_size):
+		# Send the ppp and N variables to the other processors, tagged for identification.
 		mpi_comm.send(ppp,dest=i,tag=0)
 		mpi_comm.send(N,dest=i,tag=2)
+    # Set the value of ppp used by the rank 0 processor
     ppp += remainder
 
 if mpi_rank != 0:
+	# Only non-root processors should receive the ppp and N variables. 
+	# Note the tag identifies the transaction and matches the ppp or N send commands above.
 	ppp = mpi_comm.recv(source=0,tag=0)
 	N = mpi_comm.recv(source=0,tag=2)
 
@@ -47,12 +51,14 @@ for i in xrange(ppp):
     pt = getp()
     fave += f(*pt)/N
 if mpi_rank != 0:
+	# Send the results of each non-root processor back to root.
 	mpi_comm.send(fave,dest=0,tag=1)
 
-# Write output
+# Write output using root processor
 if (mpi_rank == 0):
     Volume = 100.0**3.0
     for i in xrange(1,mpi_size):
+	# The root processor retrieves the contributions from others
         fave += mpi_comm.recv(source=i,tag=1)
     integral = Volume*fave
     print 'Integral in region 100x100x100: ' + str(integral)
